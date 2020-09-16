@@ -7,8 +7,8 @@ algorithm problems (i.e. code puzzles).
 
 ## Prerequisites
 
-You will need Erlang, Gleam, and rebar. The easiest way to set them all up is
-by using [asdf]. The exact version used this repo is tested against:
+You will need [Erlang], [Gleam], and [rebar]. The easiest way to set them all up
+is by using [asdf]. The exact version used by this repo as tested:
 
 - [Erlang] 23.0.3
 - [Gleam] 0.11.2
