@@ -1,5 +1,5 @@
 import gleam/should
-import hello
+import kattis_gleam/hello
 
 pub fn should_print_hello_world() {
   hello.main()
