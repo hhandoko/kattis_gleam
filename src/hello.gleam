@@ -14,7 +14,6 @@
 // Difficulty:
 //   1.2
 //
-
 pub fn main() -> String {
   "Hello World!"
 }
