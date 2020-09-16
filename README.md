@@ -1,3 +1,7 @@
+[![License](https://img.shields.io/badge/license-Apache--2.0-brightgreen.svg)](LICENSE)
+[![Test](https://github.com/hhandoko/kattis_gleam/workflows/test/badge.svg)](https://github.com/hhandoko/kattis_gleam/actions?query=workflow%3Atest)
+
+
 # kattis_gleam
 
 [Kattis] solutions based on [Gleam] programming language. The main purpose of
