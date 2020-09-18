@@ -8,6 +8,8 @@
 this repo is to explore the programming language features when solving common
 algorithm problems (i.e. code puzzles).
 
+Refer to the following link for the list of problems, ranked from easiest to
+hardest: <https://open.kattis.com/problems?order=problem_difficulty>
 
 ## Prerequisites
 
