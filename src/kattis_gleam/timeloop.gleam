@@ -58,11 +58,12 @@
 //// ```
 ////
 
-import gleam/list.{fold, intersperse}
-import gleam/int.{parse, to_string}
-import gleam/iterator.{map as i_map, range, to_list}
-import gleam/result.{map as r_map, map_error, then}
-import gleam/string.{append}
+import gleam/list
+import gleam/int
+import gleam/iterator as itr
+import gleam/result
+import gleam/string
+import gleam/string_builder as sb
 
 pub const out_of_range_error = "Input should be between 1 and 100 (inclusive)"
 
@@ -84,40 +85,42 @@ fn validate(in: Int) -> Result(Int, String) {
   }
 }
 
-// NOTE: `gleam/string_builder` cannot be imported? (At gleam 0.11)
-//       The method below is less efficient as it copies the string for every
-//       append operation.
 fn cast_spell(in: Int) -> String {
-  range(from: 1, to: in + 1)
-  |> i_map(fn(i) {
+  let seed = sb.from_string("")
+  let line_sep_sb = sb.from_string(line_sep)
+
+  itr.range(from: 1, to: in + 1)
+  |> itr.map(fn(i) {
     i
-    |> to_string
-    |> append(sep)
-    |> append(magic_word)
+    |> int.to_string
+    |> sb.from_string
+    |> sb.append(sep)
+    |> sb.append(magic_word)
   })
-  |> to_list
-  |> intersperse(line_sep)
-  |> fold(
-    from: "",
+  |> itr.to_list
+  |> list.intersperse(line_sep_sb)
+  |> list.fold(
+    from: seed,
     with: fn(el, acc) {
       acc
-      |> append(el)
+      |> sb.append_builder(el)
     },
   )
+  |> sb.to_string
 }
 
 pub fn run(in: String) -> String {
   let result =
     in
-    |> parse
-    |> map_error(fn(_) { invalid_number_error })
-    |> then(validate)
-    |> r_map(cast_spell)
+    |> int.parse
+    |> result.map_error(fn(_) { invalid_number_error })
+    |> result.then(validate)
+    |> result.map(cast_spell)
 
   case result {
     Ok(spell) -> spell
     Error(err) ->
       "Error: "
-      |> append(err)
+      |> string.append(err)
   }
 }

@@ -1,5 +1,5 @@
-import gleam/string.{append}
 import gleam/should
+import gleam/string.{append}
 import kattis_gleam/timeloop
 
 pub fn print_5_spells_test() {

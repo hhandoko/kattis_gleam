@@ -1,5 +1,5 @@
-import gleam/string.{append}
 import gleam/should
+import gleam/string.{append}
 import kattis_gleam/carrots
 
 pub fn print_1_carrot_test() {
