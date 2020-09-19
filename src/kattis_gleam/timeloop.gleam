@@ -3,7 +3,7 @@
 //// Difficulty: 1.3
 //// See: https://open.kattis.com/problems/timeloop
 ////
-//// ## Overview
+//// ### Overview
 ////
 //// Last night when you went to sleep, you had a strange feeling that you may
 //// see the same day again. And your strange feeling came to bewhen you woke
@@ -63,22 +63,25 @@ import gleam/int.{to_string}
 import gleam/iterator.{map, range, to_list}
 import gleam/string.{append}
 
-// NOTE: gleam/string_builder cannot be imported?
+const magic_word = "Abracadabra"
+
+const line_sep = "\n"
+
+const sep = " "
+
+// NOTE: `gleam/string_builder` cannot be imported? (At gleam 0.11)
 //       The method below is less efficient as it copies the string for every
 //       append operation.
 pub fn run(n: Int) -> String {
-  let separator = "\n"
-  let magic_word = "Abracadabra"
-
   range(from: 1, to: n + 1)
   |> map(fn(i) {
     i
     |> to_string
-    |> append(" ")
+    |> append(sep)
     |> append(magic_word)
   })
   |> to_list
-  |> intersperse(separator)
+  |> intersperse(line_sep)
   |> fold(
     from: "",
     with: fn(el, acc) {
