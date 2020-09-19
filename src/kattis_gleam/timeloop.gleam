@@ -65,9 +65,9 @@ import gleam/result
 import gleam/string
 import gleam/string_builder.{StringBuilder} as sb
 
-pub const out_of_range_error = "Input should be between 1 and 100 (inclusive)"
-
 pub const invalid_number_error = "Input is not a valid number"
+
+pub const out_of_range_error = "Input should be between 1 and 100 (inclusive)"
 
 const magic_word = "Abracadabra"
 
@@ -86,7 +86,7 @@ fn validate(in: Int) -> Result(Int, String) {
   let max = 100
 
   case in {
-    in if in >= min && in <= max -> Ok(in)
+    in if min <= in && in <= max -> Ok(in)
     _ -> Error(out_of_range_error)
   }
 }

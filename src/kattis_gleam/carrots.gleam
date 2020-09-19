@@ -77,11 +77,11 @@ fn get_first_line(in: String) -> Result(String, String) {
     |> string.split(line_sep)
     |> list.map(string.trim)
 
-  case lines {
-    [] -> Error(no_input_error)
-    [line] if line == "" -> Error(no_input_error)
-    [line] -> Ok(line)
-    [head, ..] -> Ok(head)
+  case string.trim(in), lines {
+    "", _ -> Error(no_input_error)
+    _, [line] if line == "" -> Error(no_input_error)
+    _, [line] -> Ok(line)
+    _, [head, ..] -> Ok(head)
   }
 }
 
