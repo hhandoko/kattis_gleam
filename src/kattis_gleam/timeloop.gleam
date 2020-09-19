@@ -58,12 +58,12 @@
 //// ```
 ////
 
-import gleam/list
 import gleam/int
+import gleam/list
 import gleam/iterator as itr
 import gleam/result
 import gleam/string
-import gleam/string_builder as sb
+import gleam/string_builder.{StringBuilder} as sb
 
 pub const out_of_range_error = "Input should be between 1 and 100 (inclusive)"
 
@@ -75,6 +75,12 @@ const line_sep = "\n"
 
 const sep = " "
 
+fn parse_arg(arg: String) -> Result(Int, String) {
+  arg
+  |> int.parse
+  |> result.map_error(fn(_) { invalid_number_error })
+}
+
 fn validate(in: Int) -> Result(Int, String) {
   let min = 1
   let max = 100
@@ -85,35 +91,30 @@ fn validate(in: Int) -> Result(Int, String) {
   }
 }
 
+fn compose_spell(in: Int) -> StringBuilder {
+  in
+  |> int.to_string
+  |> sb.from_string
+  |> sb.append(sep)
+  |> sb.append(magic_word)
+}
+
 fn cast_spell(in: Int) -> String {
   let seed = sb.from_string("")
   let line_sep_sb = sb.from_string(line_sep)
 
   itr.range(from: 1, to: in + 1)
-  |> itr.map(fn(i) {
-    i
-    |> int.to_string
-    |> sb.from_string
-    |> sb.append(sep)
-    |> sb.append(magic_word)
-  })
+  |> itr.map(compose_spell)
   |> itr.to_list
   |> list.intersperse(line_sep_sb)
-  |> list.fold(
-    from: seed,
-    with: fn(el, acc) {
-      acc
-      |> sb.append_builder(el)
-    },
-  )
+  |> list.fold(from: seed, with: sb.prepend_builder)
   |> sb.to_string
 }
 
 pub fn run(in: String) -> String {
   let result =
     in
-    |> int.parse
-    |> result.map_error(fn(_) { invalid_number_error })
+    |> parse_arg
     |> result.then(validate)
     |> result.map(cast_spell)
 

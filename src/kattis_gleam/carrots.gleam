@@ -56,10 +56,10 @@
 //// ```
 ////
 
-import gleam/int.{parse, to_string}
-import gleam/list.{map}
-import gleam/result.{flatten, map_error, then}
-import gleam/string.{append, split, trim}
+import gleam/int
+import gleam/list
+import gleam/result
+import gleam/string
 
 pub const no_input_error = "Input is not provided"
 
@@ -74,8 +74,8 @@ const sep = " "
 fn get_first_line(in: String) -> Result(String, String) {
   let lines =
     in
-    |> split(line_sep)
-    |> map(trim)
+    |> string.split(line_sep)
+    |> list.map(string.trim)
 
   case lines {
     [] -> Error(no_input_error)
@@ -88,7 +88,7 @@ fn get_first_line(in: String) -> Result(String, String) {
 fn get_second_arg(in: String) -> Result(String, String) {
   let args =
     in
-    |> split(sep)
+    |> string.split(sep)
 
   case args {
     [_, second] -> Ok(second)
@@ -99,24 +99,23 @@ fn get_second_arg(in: String) -> Result(String, String) {
 
 fn parse_arg(arg: String) -> Result(Int, String) {
   arg
-  |> parse
-  |> map_error(fn(_) { invalid_number_error })
-}
-
-fn count_carrots(in: String) -> Result(Int, String) {
-  in
-  |> get_first_line
-  |> then(get_second_arg)
-  |> then(parse_arg)
+  |> int.parse
+  |> result.map_error(fn(_) { invalid_number_error })
 }
 
 pub fn run(in: String) -> String {
-  case count_carrots(in) {
+  let result =
+    in
+    |> get_first_line
+    |> result.then(get_second_arg)
+    |> result.then(parse_arg)
+
+  case result {
     Ok(count) ->
       count
-      |> to_string
+      |> int.to_string
     Error(err) ->
       "Error: "
-      |> append(err)
+      |> string.append(err)
   }
 }
