@@ -59,9 +59,14 @@
 ////
 
 import gleam/list.{fold, intersperse}
-import gleam/int.{to_string}
-import gleam/iterator.{map, range, to_list}
+import gleam/int.{parse, to_string}
+import gleam/iterator.{map as i_map, range, to_list}
+import gleam/result.{map as r_map, map_error, then}
 import gleam/string.{append}
+
+pub const out_of_range_error = "Input should be between 1 and 100 (inclusive)"
+
+pub const invalid_number_error = "Input is not a valid number"
 
 const magic_word = "Abracadabra"
 
@@ -69,12 +74,22 @@ const line_sep = "\n"
 
 const sep = " "
 
+fn validate(in: Int) -> Result(Int, String) {
+  let min = 1
+  let max = 100
+
+  case in {
+    in if in >= min && in <= max -> Ok(in)
+    _ -> Error(out_of_range_error)
+  }
+}
+
 // NOTE: `gleam/string_builder` cannot be imported? (At gleam 0.11)
 //       The method below is less efficient as it copies the string for every
 //       append operation.
-pub fn run(n: Int) -> String {
-  range(from: 1, to: n + 1)
-  |> map(fn(i) {
+fn cast_spell(in: Int) -> String {
+  range(from: 1, to: in + 1)
+  |> i_map(fn(i) {
     i
     |> to_string
     |> append(sep)
@@ -89,4 +104,20 @@ pub fn run(n: Int) -> String {
       |> append(el)
     },
   )
+}
+
+pub fn run(in: String) -> String {
+  let result =
+    in
+    |> parse
+    |> map_error(fn(_) { invalid_number_error })
+    |> then(validate)
+    |> r_map(cast_spell)
+
+  case result {
+    Ok(spell) -> spell
+    Error(err) ->
+      "Error: "
+      |> append(err)
+  }
 }
